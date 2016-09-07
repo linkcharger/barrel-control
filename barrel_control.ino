@@ -3,7 +3,7 @@
 
 //#define TEST
 
-const int dhtPin = A1;
+const int dhtPin = A2;
 DHT dht(dhtPin, DHT11);
 
 //fans
@@ -11,10 +11,10 @@ const int sinkPin = 9;
 const int intakePin = 10;
 const int caseFan = 11;
 
-int sinkP = 20;
-int intakeP = 20;
+int sinkP = 15;
+int intakeP = 15;
 
-const int sinkAim = 35;
+const int sinkAim = 30;
 const int sinkHys = 5;
 
 const int thermistor = A0;
@@ -35,7 +35,7 @@ unsigned long lastFanTime = 0;
 bool flower = false;
 bool automatic = true;
 bool status = 0;
-const int lights = A4;
+const int lights = 13;
 unsigned long lastLightTime, lightsOffPeriod;
 
 //RGB LED
@@ -157,8 +157,8 @@ void blink(int blinks, int ontime) {
 	}
 
 	analogWrite(rgb[0], r);
-	analogWrite(rgb[2], g);
-	analogWrite(rgb[3], b);
+	analogWrite(rgb[2], b); //changed
+	analogWrite(rgb[3], g); //changed
 
 	for (int i = 0; i < blinks; i++) {
 
@@ -231,7 +231,7 @@ void adjustPower() {
 	//too hot or humid: crank it!
 	if ((t >= 30 || h > 80) && intakeP < 85) intakeP += 5;
 	//cool enough: calm it! 
-	else if (t < 30 && intakeP > 10) intakeP--;
+	else if (t < 30 && intakeP > 15) intakeP--;
 }
 
 void changeMode() {
@@ -259,22 +259,20 @@ void changeMode() {
 void switchLightControl() {
 	//current control mode
 	if (automatic) color = 'g'; else color = 'c';
-	blink(1, 1000);
+	blink(1, 500);
 	
 	automatic = !automatic;
 
 	//updated mode
 	if (automatic) color = 'g'; else color = 'c';
-	blink(1, 1000);
+	blink(1, 500);
 }
-
-
 
 void outputs() {
 	if (pressed) {
 
-		//wait 3s for other presses
-		for (int i = 0; i < 300; i++) delay(10);
+		//wait 4s for other presses
+		for (int i = 0; i < 400; i++) delay(10);
 
 		// 5sec are over,  display stuff:
 		switch (presses) {
